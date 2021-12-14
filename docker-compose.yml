@@ -1,51 +1,34 @@
-version: '3.7'
+version: "3.9"
 
 services:
+  # -------------------------------------------------------
+  # The scm-manager is used to handle all source code and
+  # revision management
+  scm:
+    extends:
+      file: scm/docker-compose.yml
+      service: scm
 
-    scm:
-        image: scmmanager/scm-manager:latest
-        restart: always
-        
-        container_name: catweazle-scm
-        hostname: catweazle-scm
+  # -------------------------------------------------------
+  # Redmine is a flexible project management web application.
+  # Written using the Ruby on Rails framework, it is
+  # cross-platform and cross-database.
+  redmine:
+    extends:
+      file: redmine/docker-compose.yml
+      service: redmine
 
-        ports:
-            - "8080:8080"
-            # if the ssh plugin is used
-            # - "2222:2222"
+    depends_on:
+      - mysql
 
-        volumes:
-            - scm:/var/lib/scm
+  # -------------------------------------------------------
+  # MySQL is an open-source relational database management
+  # system (RDBMS)
+  mysql:
+    extends:
+      file: mysql/docker-compose.yml
+      service: mysql
 
-    redmine:
-        image: redmine
-        restart: always
-        
-        container_name: catweazle-rm
-        hostname: catweazle-rm
-        
-        ports:
-            - "3000:3000"
-        
-        environment:
-            REDMINE_DB_MYSQL: catweazle-db
-            REDMINE_DB_PASSWORD: example
-            REDMINE_SECRET_KEY_BASE: supersecretkey
-
-    db:
-        image: mysql:5.7
-        restart: always
-        
-        container_name: catweazle-db
-        hostname: catweazle-db
-        
-        volumes:
-            - db:/var/lib/mysql
-        
-        environment:
-            MYSQL_ROOT_PASSWORD: example
-            MYSQL_DATABASE: redmine
-    
 volumes:
-  scm: {}
-  db: {}
+    scm: {}
+    mysql: {}

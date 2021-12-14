@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+    scm:
+        image: scmmanager/scm-manager
+        restart: always
+
+        container_name: catweazle-scm
+        hostname: catweazle-scm
+
+        ports:
+            - "8080:8080"
+            # if the ssh plugin is used
+            # - "2222:2222"
+
+        volumes:
+            - scm:/var/lib/scm
+
+volumes:
+    scm: {}
