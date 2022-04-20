@@ -1,0 +1,26 @@
+html * {
+    font-size: 1em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+table {
+    width:1030px;
+    border:solid;
+    border-collapse:separate;
+    border-spacing: 1em .5em;
+    font-family: Arial, Helvetica, sans-serif;
+    padding:3pt;
+    margin:8px;
+}
+
+table th {
+    padding:10px;
+    text-align:right;
+}
+
+table td {
+    padding:10px;
+    border:1px solid black;
+    border-spacing:5px;
+    text-align:left;
+}

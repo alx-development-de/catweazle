@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+
+  nginx:
+    image: alx-development/catweazle-proxy:latest
+    restart: always
+
+    hostname: catweazle-proxy
+
+    build:
+      context: ./
+      dockerfile: Dockerfile
+
+    environment:
+      - NGINX_SERVER_NAME=catweazle-proxy
+
+    ports:
+      - "80:80"

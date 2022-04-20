@@ -4,10 +4,10 @@ services:
   # -------------------------------------------------------
   # The scm-manager is used to handle all source code and
   # revision management
-  scm:
-    extends:
-      file: scm/docker-compose.yml
-      service: scm
+#  scm:
+#    extends:
+#      file: scm/docker-compose.yml
+#      service: scm
 
   # -------------------------------------------------------
   # Redmine is a flexible project management web application.
@@ -28,6 +28,14 @@ services:
     extends:
       file: mysql/docker-compose.yml
       service: mysql
+
+  # -------------------------------------------------------
+  # Implementing a nginx reverse proxy to handle access
+  # to the web based frontends
+  nginx:
+    extends:
+      file: nginx/docker-compose.yml
+      service: nginx
 
 volumes:
     scm: {}
