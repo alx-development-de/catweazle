@@ -91,6 +91,12 @@
 % contain the introduction and a brief description
 \markdownInput{../README.md}
 
+\chapter{Management of the infrastructure}\label{ch:portainer}
+
+The management of the virtual infrastructure should be as simple as possible.
+Therefore, I decided to use \emph{Portainer} for the management of the virtual systems, cause Portainer accelerates container adoption.
+It reduces operational complexity and addresses the security challenges of running containers in Docker, Swarm, Nomad and Kubernetes
+
 \section{Install Portainer}\label{sec:install-portainer}
 
 In this chapter, we’ll explain how to install Portainer on Ubuntu 22.04 with Docker.
@@ -161,7 +167,8 @@ The following command will download Docker and install it:
 
 Install Portainer on Ubuntu 22.04 with Docker
 
-3. Create a container
+3.
+Create a container
 We’ll show you two ways to deploy the container.
 
 1.
