@@ -1,0 +1,267 @@
+\documentclass[%
+	a4paper,
+	oneside,
+	listof=numbered,
+	parskip=half,
+	headsepline=true,
+	footsepline=false,
+	0.7headlines,
+	]{scrbook}
+
+\usepackage{scrlayer-scrpage}
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage[fixlanguage]{babelbib}
+\selectbiblanguage{english}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{xltabular}
+\usepackage{wrapfig}
+\usepackage{adjustbox}
+% listings package requires the scrhack to
+% work properly and ommit a warning message
+\usepackage{scrhack}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{markdown}
+\usepackage{tikz}
+\usetikzlibrary{shapes,positioning}
+\usepackage{typearea}
+\areaset[1cm]{15cm}{23cm} % selbst setzen
+
+% Style-Definition für die Code-Listings
+\lstdefinestyle{mystyle}{
+     basicstyle=\ttfamily\footnotesize,
+     breakatwhitespace=false,
+     breaklines=true,
+     captionpos=t,
+     frame=tlrb,
+     keepspaces=true,
+     numbersep=5pt,
+     showspaces=false,
+     showstringspaces=false,
+     showtabs=false,
+     tabsize=2,
+     columns=fullflexible,
+}
+\lstset{style=mystyle}
+
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+
+\lstdefinelanguage{bash}
+{
+  stringstyle=\color{black},
+  identifierstyle=\color{darkblue},
+  keywordstyle=\color{cyan},
+  morekeywords={sudo,apt-key,apt,curl}% list your attributes here
+}
+
+\titlehead
+{
+	\adjustimage
+	{
+		width=\paperwidth,
+		pagecenter,
+		valign=B,
+		}{cover-headline} % The headline image
+	}
+
+\pagestyle{scrheadings}
+
+\begin{document}
+% --------------------------------------------------------------
+\title{CATweazle}
+\subtitle{An environment for data handling in development and production of industrial cabinet building}
+\subject{Industrial cabinet building}
+\author{Dipl.-Ing. (FH) Alexander Thiel M.Sc.}
+
+% Mit diesem Kommando kann das Datum festgelegt werden. Das ist sinnvoll, wenn dieser Bericht fertig ist und sich das Datum nicht immer, wenn er neu generiert wird wieder ändern soll.
+%\date{30. Februar 2022}
+%\publishers{...}
+
+\maketitle
+\tableofcontents
+% --------------------------------------------------------------
+
+\chapter{Introduction}\label{ch:introduction}
+
+% Here we import the README.md file from theprojects base folder which should
+% contain the introduction and a brief description
+\markdownInput{../README.md}
+
+\section{Install Portainer}\label{sec:install-portainer}
+
+In this chapter, we’ll explain how to install Portainer on Ubuntu 22.04 with Docker.
+
+Portainer is powerful, open-source toolset that allows you to easily build and manage
+containers in Docker, Swarm, Kubernetes and Azure ACI. It works by hiding the complexity
+that makes managing containers hard, behind an easy-to-use GUI .
+
+\subsection{Prerequisites}\label{subsec:prerequisites}
+
+\begin{enumerate}
+\item Ubuntu 22.04 installed on a dedicated server or virtual machine.
+\item A root user access or normal user with administrative privileges.
+\item Add A record of your preferred domain like port.example.com
+\end{enumerate}
+
+First of all, keep server updated.
+It's good practice to always keep your server up-to-date for security purpose.
+On the Ubuntu system use the \verb|apt| command for the package management as shown below.
+
+\begin{lstlisting}[%
+	label={lst:apt-update},
+	language=bash,
+]
+# sudo apt update -y
+\end{lstlisting}
+
+Now we install the required dependencies for Docker also using the \verb|apt| package manager.
+
+\begin{lstlisting}[%
+	label={lst:apt-install-docker-dependencies},
+	language=bash,
+]
+# sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+\end{lstlisting}
+
+
+Next, run the commands below to download and install Docker’s official GPG key.
+The key is used to validate packages installed from Docker’s repository making sure they’re trusted.
+
+\begin{lstlisting}[%
+	label={lst:docker-install-gpg-keys1},
+	language=bash,
+]
+# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+# sudo apt-key fingerprint 0EBFCD88
+\end{lstlisting}
+
+Add the Docker Repository
+
+\begin{lstlisting}[%
+	label={lst:docker-install-gpg-keys2},
+	language=bash,
+]
+# sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+\end{lstlisting}
+
+The following command will download Docker and install it:
+
+\begin{lstlisting}[%
+	label={lst:xml_example_reference05},
+	caption={Example of referencing objects},
+	language=bash,
+]
+# sudo apt-get update -y
+# sudo apt-get install docker-ce -y
+\end{lstlisting}
+
+Install Portainer on Ubuntu 22.04 with Docker
+
+3. Create a container
+We’ll show you two ways to deploy the container.
+
+1.
+If you want to use domain name to access Portainer, use following command to deploy the container:
+
+\begin{lstlisting}[%
+	label={lst:xml_example_reference06},
+	language=bash,
+]
+# sudo docker run -restart always -d -name=portainer -v /var/run/docker.sock:/var/run/docker.sock -v /vol/portainer/data:/data -e VIRTUAL_HOST=port.example.com -e VIRTUAL_PORT=9000 portainer/portainer-ce -H unix:///var/run/docker.sock
+\end{lstlisting}
+
+
+Note:
+
+-v /var/run/docker.sock:/var/run/docker.sock means mounting /var/run/docker.sock to the container so portainer can control the Docker.
+-v /vol/portainer/data:/data means storing data of portainer on directory /vol/portainer/data.
+port.example.com is your domain to access the portainer.
+
+2.
+If you want to access Portainer using server IP, use following command to deploy the container:
+
+\begin{lstlisting}[%
+	label={lst:docker-run-portainer},
+	language=bash,
+]
+# sudo docker volume create portainer_data
+# sudo docker run -d -p 8000:8000 -p 9000:9000 -name=portainer -restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce
+\end{lstlisting}
+
+
+4. Configure Reverse Proxy for Portainer (Optional if you will use domain name)
+Caddyfile is a reverse proxy server.
+It is necessary to secure the connection to prevent network hijacking.
+Caddyfile can obtain and automatically maintains SSL certificate.
+
+Create a Caddyfile.
+Caddyfile is a document containing configs for your sites:
+
+\begin{lstlisting}[%
+	label={lst:xml_example_reference08},
+	caption={Example of referencing objects},
+	language=bash,
+]
+# sudo mkdir -p /vol/caddy/configs
+# sudo vim /vol/caddy/configs/Caddyfile
+\end{lstlisting}
+
+
+Add following content:
+
+\begin{lstlisting}[%
+	label={lst:xml_example_reference09},
+	caption={Example of referencing objects},
+	language=bash,
+]
+port.example.com {
+	tls youremail@example.com
+	reverse_proxy portainer:8000
+}
+\end{lstlisting}
+
+
+Replace: port.example.com with your domain name and youremail@example.com with your actual email id.
+
+Save and exit.
+
+Finally, create a Caddy container using following command:
+
+\begin{lstlisting}[%
+	label={lst:xml_example_reference},
+	language=bash,
+]
+# sudo docker run -restart always -d -p 80:80 -p 443:443 -v "/vol/caddy/data:/data/caddy" -v "/vol/caddy/configs:/etc/caddy" -link portainer -name caddy caddy
+\end{lstlisting}
+
+Note:
+
+-p 80:80 -p 443:443 means publish its 80 and 443 port to your host, so you can access it with those ports.
+-v “/vol/caddy/data:/data/caddy” means mount caddy working directory to your host to persist data such as certificates.
+-v “/vol/caddy/configs:/etc/caddy” means mount caddy configuration directory to your host to persist configurations.
+–link portainer means link container caddy with portainer, so they can access with each other.
+5.
+Access Portainer
+Navigate to your browser and access the Portainer by using either your domain or server IP and set admin password and finish the installment.
+
+
+
+Install Portainer on Ubuntu 22.04 with Docker
+
+That’s it.
+The installation has been completed successfully.
+
+% --------------------------------------------------------------
+% Die Verzeichnisüberischten
+\listoffigures
+%\listoftables
+\lstlistoflistings
+
+%\bibliographystyle{babplain}
+%\bibliography{ECAD-Export}
+
+\end{document}
