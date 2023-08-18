@@ -1,0 +1,14 @@
+version: "2"
+
+services:
+
+  scanner:
+    image: catweazle/bcprinter:latest
+    restart: always
+
+    env_file:
+      - docker.env
+
+    build:
+      context: ./
+      dockerfile: Dockerfile
